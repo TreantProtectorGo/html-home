@@ -51,65 +51,27 @@
 
     <!-- banner -->
     <section>
-      <section class="mt-md-4 mt-1 container px-1" >
-        <div
-          id="carouselBannerIndicators"
-          class="carousel slide rounded bg-white shadow-sm"
-          data-bs-ride="carousel"
-        >
-        <div class="carousel-indicators">
-          <button
-            type="button"
-            data-bs-target="#carouselBannerIndicators"
-            data-bs-slide-to="0"
-            class="active"
-            aria-current="true"
-            aria-label="Slide 1"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselBannerIndicators"
-            data-bs-slide-to="1"
-            aria-label="Slide 2"
-          ></button>
-          <button
-            type="button"
-            data-bs-target="#carouselBannerIndicators"
-            data-bs-slide-to="2"
-            aria-label="Slide 3"
-          ></button>
-          </div>
+      <section class="mt-md-4 mt-1 container px-1" id="app">
+        <div id="carouselBannerIndicators" class="carousel slide rounded bg-white shadow-sm" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button v-for="(slide, index) in slides" :key="index" type="button" :data-bs-target="'#carouselBannerIndicators'" :data-bs-slide-to="index" :class="{ active: index === activeIndex }" :aria-current="index === activeIndex" :aria-label="'Slide ' + (index + 1)"></button>
+      </div>
 
-          <div class="carousel-inner m-auto rounded">
-            <div class="carousel-item active">
-              <img src="./assets/big/1.jpg" class="d-block img-fluid h-100" alt="..." />
-            </div>
-            <div class="carousel-item">
-              <img src="./assets/big/2.jpg" class="d-block img-fluid h-100" alt="..." />
-            </div>
-            <div class="carousel-item">
-              <img src="./assets/big/3.jpg" class="d-block img-fluid h-100" alt="..." />
-            </div>  
-          </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselBannerIndicators"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselBannerIndicators"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
+      <div class="carousel-inner m-auto rounded">
+        <div v-for="(slide, index) in slides" :key="index" :class="{ 'carousel-item': true, active: index === activeIndex }">
+          <img :src="slide.image" class="d-block img-fluid h-100" :alt="slide.alt" />
         </div>
+      </div>
+
+      <button class="carousel-control-prev" type="button" :data-bs-target="'#carouselBannerIndicators'" @click="prevSlide">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" :data-bs-target="'#carouselBannerIndicators'" @click="nextSlide">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
       </section>
 
       <!-- Login Section -->
@@ -340,3 +302,29 @@
     </nav> -->
   </body>
 </html>
+
+<script>
+  const { createApp } = Vue
+  
+  createApp({
+    data() {
+      return {
+        slides: [],
+        activeIndex: 0
+      }
+    },
+    mounted() {
+      for (let i = 1; i <= 26; i++) {
+        this.slides.push({ image: `./assets/big/${i}.jpg`, alt: `Slide ${i}` })
+      }
+    },
+    methods: {
+      prevSlide() {
+        this.activeIndex = (this.activeIndex === 0) ? this.slides.length - 1 : this.activeIndex - 1;
+      },
+      nextSlide() {
+        this.activeIndex = (this.activeIndex === this.slides.length - 1) ? 0 : this.activeIndex + 1;
+      }
+    }
+  }).mount('#app')
+  </script>
